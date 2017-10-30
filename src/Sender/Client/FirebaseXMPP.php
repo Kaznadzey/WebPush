@@ -113,6 +113,7 @@ class FirebaseXMPP implements ClientInterface
             while ($response = $this->readResponse($socketClient)) {
 
                 $parsedResponse = $this->parseResponse($response);
+
                 /** @var \DOMElement $childNode */
                 foreach ($parsedResponse->childNodes as $childNode) {
 
@@ -123,6 +124,7 @@ class FirebaseXMPP implements ClientInterface
 
                             if ($decodedNodeValue->message_type === 'ack') {
                                 $sentSuccess = true;
+
                                 break 2;
                             }
                         }
