@@ -1,0 +1,23 @@
+{
+    "name": "nazz/webpush",
+    "description": "This is webPush library for fast run your messaging",
+    "require": {
+        "php": ">=5.4.0"
+    },
+    "require-dev": {
+        "php": ">=5.4.0"
+    },
+    "license": "public",
+    "authors": [
+        {
+            "name": "Nazar Kaznadzey",
+            "email": "nazar.kaznadzey@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-4": {
+            "Nazz\\WebPush\\": "src/"
+        }
+    }
+}

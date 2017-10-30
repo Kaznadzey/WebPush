@@ -1,0 +1,1 @@
+This is simple WebPush send client for your site integration.
