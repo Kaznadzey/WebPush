@@ -5,9 +5,9 @@ namespace Nazz\WebPush\Sender\Client;
 use Nazz\WebPush\Sender\Message;
 
 /**
- * Interface ClientInterface
+ * Interface SenderClientInterface
  */
-interface ClientInterface
+interface SenderClientInterface
 {
     /**
      * @param string  $token

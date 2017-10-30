@@ -7,7 +7,7 @@ use Nazz\WebPush\Sender\Message;
 /**
  * Class APN
  */
-class APN implements ClientInterface
+class APN implements SenderClientInterface
 {
     const SHOW_BUTTON = 'Show';
 

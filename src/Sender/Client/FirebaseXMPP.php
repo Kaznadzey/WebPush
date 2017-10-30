@@ -7,7 +7,7 @@ use Nazz\WebPush\Sender\Message;
 /**
  * Class FirebaseXMPP
  */
-class FirebaseXMPP implements ClientInterface
+class FirebaseXMPP implements SenderClientInterface
 {
     /** @var string */
     private $host;

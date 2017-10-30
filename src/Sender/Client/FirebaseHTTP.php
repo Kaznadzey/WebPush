@@ -7,7 +7,7 @@ use Nazz\WebPush\Sender\Message;
 /**
  * Class FirebaseHTTP
  */
-class FirebaseHTTP implements ClientInterface
+class FirebaseHTTP implements SenderClientInterface
 {
     /** @var string */
     private $apiUrl;
