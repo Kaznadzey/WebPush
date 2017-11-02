@@ -20,9 +20,17 @@ class FirebaseHTTP implements SenderClientInterface
      *
      * @param string $apiUrl
      * @param string $apiKey
+     *
+     * @throws \Exception
      */
     public function __construct($apiUrl, $apiKey)
     {
+        if (!function_exists('curl_init')) {
+            throw new \Exception(
+                'Curl is required for HTTP protocol!'
+            );
+        }
+
         $this->apiUrl = $apiUrl;
         $this->apiKey = $apiKey;
     }
