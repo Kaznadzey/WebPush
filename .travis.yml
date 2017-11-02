@@ -18,7 +18,7 @@ matrix:
 before_script:
   - composer install --dev --no-interaction
 
-script: phpunit --configuration=tests/phpunit.xml
-
-after_script:
-  - composer coveralls
+script:
+  - mkdir -p build/logs
+  - phpunit --configuration=tests/phpunit.xml
+  - composer cover
