@@ -1,0 +1,27 @@
+sudo: false
+
+dist: trusty
+
+language: php
+
+php:
+  - nightly
+  - 7.2
+  - 7.1
+  - 7.0
+  - 5.6
+  - 5.5
+
+matrix:
+  allow_failures:
+    - php: nightly
+
+before_script:
+  - composer install --dev --no-interaction
+
+script:
+  - mkdir -p build/logs
+  - composer cover
+
+after_script:
+  - composer coveralls
