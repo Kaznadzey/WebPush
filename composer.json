@@ -6,7 +6,7 @@
     },
     "require-dev": {
         "php": ">=5.4.0",
-        "phpunit/phpunit": ">=5.1.38<6.0"
+        "phpunit/phpunit": ">=5.1.38 <6.0"
     },
     "license": "MIT",
     "authors": [
