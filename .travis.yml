@@ -18,3 +18,5 @@ matrix:
 
 before_script:
   - composer install --dev --no-interaction
+
+script: phpunit --configuration=tests/phpunit.xml
