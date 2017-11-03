@@ -9,9 +9,6 @@ use Nazz\WebPush\Sender\Message;
  */
 class MessageTest extends \PHPUnit_Framework_TestCase
 {
-    /**
-     * @covers Message
-     */
     public function testMessage()
     {
         $id    = 123;
