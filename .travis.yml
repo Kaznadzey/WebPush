@@ -21,3 +21,6 @@ before_script:
 script:
   - mkdir -p build/logs
   - composer cover
+  
+after_script:
+  - composer coveralls
