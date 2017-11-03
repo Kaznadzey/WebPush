@@ -22,3 +22,6 @@ script:
   - mkdir -p build/logs
   - phpunit --configuration=tests/phpunit.xml
   - composer cover
+  
+after_script:
+  - composer coveralls
