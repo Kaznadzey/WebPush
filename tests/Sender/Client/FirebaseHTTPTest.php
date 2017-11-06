@@ -10,17 +10,11 @@ use Nazz\WebPush\Sender\Message;
  */
 class FirebaseHTTPTest extends \PHPUnit_Framework_TestCase
 {
+    /** @var Message|null */
+    private $message;
+
     public function testSendSuccess()
     {
-        $message = new Message(
-            md5('test'),
-            'MessageTitle',
-            'MessageBody',
-            'http://www.google.com',
-            'http://www.google.com',
-            32
-        );
-
         $response          = new \stdClass();
         $response->success = 1;
         $request           = $this->getMockBuilder(Request::class)
@@ -38,22 +32,13 @@ class FirebaseHTTPTest extends \PHPUnit_Framework_TestCase
 
         $client = new FirebaseHTTP($request, 'http://google.com', 'api-key');
 
-        $result = $client->send('test-token', $message);
+        $result = $client->send('test-token', $this->getMessage());
 
         $this->assertTrue($result);
     }
 
     public function testSendError()
     {
-        $message = new Message(
-            md5('test'),
-            'MessageTitle',
-            'MessageBody',
-            'http://www.google.com',
-            'http://www.google.com',
-            32
-        );
-
         $request           = $this->getMockBuilder(Request::class)
             ->disableOriginalConstructor()
             ->setMethods(
@@ -69,7 +54,7 @@ class FirebaseHTTPTest extends \PHPUnit_Framework_TestCase
 
         $client = new FirebaseHTTP($request, 'http://google.com', 'api-key');
 
-        $result = $client->send('test-token', $message);
+        $result = $client->send('test-token', $this->getMessage());
 
         $this->assertFalse($result);
     }
@@ -98,15 +83,6 @@ class FirebaseHTTPTest extends \PHPUnit_Framework_TestCase
 
     public function testGetMessageToSend()
     {
-        $message = new Message(
-            md5('test'),
-            'MessageTitle',
-            'MessageBody',
-            'http://www.google.com',
-            'http://www.google.com',
-            32
-        );
-
         $request = $this->getMockBuilder(Request::class)
             ->disableOriginalConstructor()
             ->getMock();
@@ -116,14 +92,14 @@ class FirebaseHTTPTest extends \PHPUnit_Framework_TestCase
         $client = new FirebaseHTTP($request, 'http://google.com', 'api-key');
 
         $jsonMessage = $this->getMethod('getMessageToSend')
-            ->invoke($client, 'token', $message);
+            ->invoke($client, 'token', $this->getMessage());
 
         $pushMessage = [
             'notification' => [
-                'title' => $message->getTitle(),
-                'body'  => $message->getBody(),
-                'icon'  => $message->getIcon(),
-                'url'   => $message->getUrl(),
+                'title' => $this->getMessage()->getTitle(),
+                'body'  => $this->getMessage()->getBody(),
+                'icon'  => $this->getMessage()->getIcon(),
+                'url'   => $this->getMessage()->getUrl(),
             ],
         ];
 
@@ -132,7 +108,7 @@ class FirebaseHTTPTest extends \PHPUnit_Framework_TestCase
                 'token',
             ],
             'data'         => $pushMessage,
-            'time_to_live' => $message->getTtl(),
+            'time_to_live' => $this->getMessage()->getTtl(),
         ];
 
         $this->assertTrue(is_string($jsonMessage));
@@ -141,6 +117,25 @@ class FirebaseHTTPTest extends \PHPUnit_Framework_TestCase
             json_encode($params),
             $jsonMessage
         );
+    }
+
+    /**
+     * @return Message
+     */
+    protected function getMessage()
+    {
+        if (is_null($this->message)) {
+            $this->message = new Message(
+                md5('test'),
+                'MessageTitle',
+                'MessageBody',
+                'http://www.google.com',
+                'http://www.google.com',
+                32
+            );
+        }
+
+        return $this->message;
     }
 
     /**

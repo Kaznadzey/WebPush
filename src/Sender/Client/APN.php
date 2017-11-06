@@ -105,7 +105,7 @@ class APN implements SenderClientInterface
      *
      * @return string
      */
-    private function createBinaryMessage($token, Message $message)
+    protected function createBinaryMessage($token, Message $message)
     {
         $payloadMessage = [
             'aps' => [
