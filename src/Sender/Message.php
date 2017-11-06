@@ -22,6 +22,9 @@ class Message
     /** @var string */
     protected $url;
 
+    /** @var int */
+    protected $ttl;
+
     /**
      * @param string $id
      * @param string $title
@@ -29,13 +32,14 @@ class Message
      * @param string $icon
      * @param string $url
      */
-    public function __construct($id, $title, $body, $icon, $url)
+    public function __construct($id, $title, $body, $icon, $url, $ttl = 0)
     {
         $this->id    = $id;
         $this->title = $title;
         $this->body  = $body;
         $this->icon  = $icon;
         $this->url   = $url;
+        $this->ttl = $ttl;
     }
 
     /**
@@ -76,5 +80,13 @@ class Message
     public function getUrl()
     {
         return $this->url;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTtl()
+    {
+        return $this->ttl;
     }
 }

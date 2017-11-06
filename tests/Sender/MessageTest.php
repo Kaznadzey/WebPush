@@ -2,8 +2,6 @@
 
 namespace Nazz\WebPush\Sender;
 
-use Nazz\WebPush\Sender\Message;
-
 /**
  * Class MessageTest
  */
@@ -16,13 +14,15 @@ class MessageTest extends \PHPUnit_Framework_TestCase
         $body  = 'Body';
         $icon  = 'http://www.google.com';
         $url   = 'http://www.google.com';
+        $ttl   = 345;
 
         $message = new Message(
             $id,
             $title,
             $body,
             $icon,
-            $url
+            $url,
+            $ttl
         );
 
         $this->assertEquals($message->getId(), $id);
@@ -30,5 +30,6 @@ class MessageTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($message->getBody(), $body);
         $this->assertEquals($message->getIcon(), $icon);
         $this->assertEquals($message->getUrl(), $url);
+        $this->assertEquals($message->getTtl(), $ttl);
     }
 }

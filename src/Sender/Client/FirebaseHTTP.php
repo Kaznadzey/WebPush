@@ -2,6 +2,7 @@
 
 namespace Nazz\WebPush\Sender\Client;
 
+use Nazz\WebPush\Http\Request;
 use Nazz\WebPush\Sender\Message;
 
 /**
@@ -9,6 +10,9 @@ use Nazz\WebPush\Sender\Message;
  */
 class FirebaseHTTP implements SenderClientInterface
 {
+    /** @var Request */
+    private $request;
+
     /** @var string */
     private $apiUrl;
 
@@ -18,21 +22,15 @@ class FirebaseHTTP implements SenderClientInterface
     /**
      * FirebaseHTTP constructor.
      *
-     * @param string $apiUrl
-     * @param string $apiKey
-     *
-     * @throws \Exception
+     * @param Request $request
+     * @param string  $apiUrl
+     * @param string  $apiKey
      */
-    public function __construct($apiUrl, $apiKey)
+    public function __construct(Request $request, $apiUrl, $apiKey)
     {
-        if (!function_exists('curl_init')) {
-            throw new \Exception(
-                'Curl is required for HTTP protocol!'
-            );
-        }
-
-        $this->apiUrl = $apiUrl;
-        $this->apiKey = $apiKey;
+        $this->request = $request;
+        $this->apiUrl  = $apiUrl;
+        $this->apiKey  = $apiKey;
     }
 
     /**
@@ -43,7 +41,39 @@ class FirebaseHTTP implements SenderClientInterface
      */
     public function send($token, Message $message)
     {
-        $message = [
+        $response = $this->request->sendPost(
+            $this->apiUrl,
+            $this->getHeaders(),
+            $this->getMessageToSend($token, $message)
+        );
+
+        if (property_exists($response, 'success') && $response->success !== 0) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @return array
+     */
+    protected function getHeaders()
+    {
+        return [
+            'Authorization: key=' . $this->apiKey,
+            'Content-Type: application/json',
+        ];
+    }
+
+    /**
+     * @param string  $token
+     * @param Message $message
+     *
+     * @return string
+     */
+    protected function getMessageToSend($token, Message $message)
+    {
+        $pushMessage = [
             'notification' => [
                 'title' => $message->getTitle(),
                 'body'  => $message->getBody(),
@@ -56,44 +86,10 @@ class FirebaseHTTP implements SenderClientInterface
             '$token'       => [
                 $token,
             ],
-            'data'         => $message,
-            'time_to_live' => 0,
-        ];
-        $params = json_encode($params);
-
-        $headers = [
-            'Authorization: key=' . $this->apiKey,
-            'Content-Type: application/json',
+            'data'         => $pushMessage,
+            'time_to_live' => $message->getTtl(),
         ];
 
-        $result = json_decode($this->sendPostRequest($this->apiUrl, $headers, $params));
-
-        if ($result->success !== 0) {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * @param string $url
-     * @param array  $headers
-     * @param string $encodedParams
-     *
-     * @return string
-     */
-    private function sendPostRequest($url, array $headers, $encodedParams)
-    {
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $encodedParams);
-
-        $result = curl_exec($ch);
-        curl_close($ch);
-
-        return $result;
+        return json_encode($params);
     }
 }

@@ -19,7 +19,8 @@ try {
         'Message title',
         'Message body',
         'https://firebase.google.com/_static/79b4008122/images/firebase/lockup.png',
-        'https://firebase.google.com'
+        'https://firebase.google.com',
+        300
     );
 
     var_dump($client->send('This is subscription token', $message));
