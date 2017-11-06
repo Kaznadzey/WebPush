@@ -83,7 +83,7 @@ class FirebaseHTTP implements SenderClientInterface
         ];
 
         $params = [
-            '$token'       => [
+            'token'        => [
                 $token,
             ],
             'data'         => $pushMessage,
