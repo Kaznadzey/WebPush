@@ -47,7 +47,10 @@ class FirebaseHTTP implements SenderClientInterface
             $this->getMessageToSend($token, $message)
         );
 
-        if (property_exists($response, 'success') && $response->success !== 0) {
+        if (is_object($response)
+            && property_exists($response, 'success')
+            && $response->success !== 0
+        ) {
             return true;
         }
 

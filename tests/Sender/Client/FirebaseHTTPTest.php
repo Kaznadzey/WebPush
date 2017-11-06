@@ -53,7 +53,7 @@ class FirebaseHTTPTest extends \PHPUnit_Framework_TestCase
             'http://www.google.com',
             32
         );
-        
+
         $request           = $this->getMockBuilder(Request::class)
             ->disableOriginalConstructor()
             ->setMethods(
