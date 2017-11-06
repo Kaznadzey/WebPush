@@ -7,6 +7,11 @@ namespace Nazz\WebPush\Http;
  */
 class Request
 {
+    /**
+     * Request constructor.
+     *
+     * @throws \Exception
+     */
     public function __construct()
     {
         if (!function_exists('curl_init')) {
