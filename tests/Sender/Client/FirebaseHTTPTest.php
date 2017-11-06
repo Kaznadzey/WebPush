@@ -71,7 +71,7 @@ class FirebaseHTTPTest extends \PHPUnit_Framework_TestCase
 
         $result = $client->send('test-token', $message);
 
-        $this->assertTrue($result);
+        $this->assertFalse($result);
     }
 
     public function testGetHeaders()
