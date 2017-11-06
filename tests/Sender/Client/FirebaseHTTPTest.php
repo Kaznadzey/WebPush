@@ -10,7 +10,7 @@ use Nazz\WebPush\Sender\Message;
  */
 class FirebaseHTTPTest extends \PHPUnit_Framework_TestCase
 {
-    public function testSend()
+    public function testSendSuccess()
     {
         $message = new Message(
             md5('test'),
@@ -33,6 +33,37 @@ class FirebaseHTTPTest extends \PHPUnit_Framework_TestCase
             ->getMock();
 
         $request->method('sendPost')->willReturn($response);
+
+        /** @var Request $request */
+
+        $client = new FirebaseHTTP($request, 'http://google.com', 'api-key');
+
+        $result = $client->send('test-token', $message);
+
+        $this->assertTrue($result);
+    }
+
+    public function testSendError()
+    {
+        $message = new Message(
+            md5('test'),
+            'MessageTitle',
+            'MessageBody',
+            'http://www.google.com',
+            'http://www.google.com',
+            32
+        );
+        
+        $request           = $this->getMockBuilder(Request::class)
+            ->disableOriginalConstructor()
+            ->setMethods(
+                [
+                    'sendPost',
+                ]
+            )
+            ->getMock();
+
+        $request->method('sendPost')->willReturn(null);
 
         /** @var Request $request */
 
