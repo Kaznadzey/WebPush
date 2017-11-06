@@ -133,6 +133,20 @@ class APN implements SenderClientInterface
     }
 
     /**
+     * @param Message $message
+     *
+     * @return string
+     */
+    protected function getClientUrlPart(Message $message)
+    {
+        $url         = $message->getUrl();
+        $explodedUrl = array_reverse(explode('/', $url));
+        $clientUrl   = array_shift($explodedUrl);
+
+        return $clientUrl;
+    }
+
+    /**
      * @return resource
      * @throws \DomainException
      */
@@ -196,19 +210,5 @@ class APN implements SenderClientInterface
         }
 
         return $socketClient;
-    }
-
-    /**
-     * @param Message $message
-     *
-     * @return string
-     */
-    private function getClientUrlPart(Message $message)
-    {
-        $url         = $message->getUrl();
-        $explodedUrl = array_reverse(explode('/', $url));
-        $clientUrl   = array_shift($explodedUrl);
-
-        return $clientUrl;
     }
 }

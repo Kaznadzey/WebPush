@@ -52,6 +52,26 @@ class APNTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    public function testGetClientUrlPart()
+    {
+        $client = new APN(
+            '',
+            '',
+            '',
+            300
+        );
+
+        $actualResponse = $this->getMethod('getClientUrlPart')
+            ->invoke($client, $this->getMessage());
+        
+        $expectedResponse = 'arguments';
+
+        $this->assertEquals(
+            $expectedResponse,
+            $actualResponse
+        );
+    }
+
     /**
      * @return Message
      */
