@@ -27,5 +27,3 @@ try {
 } catch (\Throwable $e) {
     echo PHP_EOL . $e->getMessage() . PHP_EOL;
 }
-
-?>
