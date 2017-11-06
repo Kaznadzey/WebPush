@@ -63,7 +63,7 @@ class APNTest extends \PHPUnit_Framework_TestCase
 
         $actualResponse = $this->getMethod('getClientUrlPart')
             ->invoke($client, $this->getMessage());
-        
+
         $expectedResponse = 'arguments';
 
         $this->assertEquals(

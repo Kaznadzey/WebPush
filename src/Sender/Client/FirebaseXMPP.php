@@ -34,11 +34,11 @@ class FirebaseXMPP implements SenderClientInterface
     private $closeResponseTag;
 
     /**
-     * @param string          $processId
-     * @param int             $senderId
-     * @param string          $apiKey
-     * @param string          $host
-     * @param int             $port
+     * @param string $processId
+     * @param int    $senderId
+     * @param string $apiKey
+     * @param string $host
+     * @param int    $port
      */
     public function __construct(
         $processId, // unique process id
@@ -46,7 +46,8 @@ class FirebaseXMPP implements SenderClientInterface
         $apiKey, // firebase api key
         $host, // host for firebase server (production or development)
         $port // port for firebase server (production or development)
-    ) {
+    )
+    {
         $this->processId = $processId;
         $this->senderId  = $senderId;
         $this->apiKey    = $apiKey;
@@ -64,6 +65,20 @@ class FirebaseXMPP implements SenderClientInterface
      */
     public function send($token, Message $message)
     {
+        return $this->sendRequest(
+            $message->getId(),
+            $this->getMessageToSend($token, $message)
+        );
+    }
+
+    /**
+     * @param string  $token
+     * @param Message $message
+     *
+     * @return string
+     */
+    protected function getMessageToSend($token, Message $message)
+    {
         $pushMessage = [
             'notification' => [
                 'title' => $message->getTitle(),
@@ -77,12 +92,10 @@ class FirebaseXMPP implements SenderClientInterface
             'to'           => $token,
             'message_id'   => $message->getId(),
             'data'         => $pushMessage,
-            'time_to_live' => 0,
+            'time_to_live' => $message->getTtl(),
         ];
 
-        $params = json_encode($params);
-
-        return $this->sendRequest($message->getId(), $params);
+        return json_encode($params);
     }
 
     /**
@@ -97,7 +110,7 @@ class FirebaseXMPP implements SenderClientInterface
     {
         $sentSuccess  = false;
         $socketClient = $this->getSocketClient();
-        $message = sprintf(
+        $message      = sprintf(
             '<message id="%s"><gcm xmlns="google:mobile:data">%s</gcm></message>',
             $messageId,
             $encodedParams
@@ -134,6 +147,7 @@ class FirebaseXMPP implements SenderClientInterface
         } catch (\Throwable $e) {
             throw new \Exception($e->getMessage());
         }
+
         return $sentSuccess;
     }
 
@@ -172,9 +186,9 @@ class FirebaseXMPP implements SenderClientInterface
      */
     private function openSocketClient()
     {
-        $errorNumber = null;
-        $errorString = null;
-        $context     = stream_context_create(
+        $errorNumber  = null;
+        $errorString  = null;
+        $context      = stream_context_create(
             [
                 'ssl' => [
                     'verify_peer_name'  => false,
@@ -316,9 +330,9 @@ class FirebaseXMPP implements SenderClientInterface
      */
     private function parseResponse($response)
     {
-        $dom          = new \DOMDocument();
-        $dom->recover = true;
-        $responseLoadedSuccess = $dom->loadXML($response, LIBXML_NOWARNING | LIBXML_NOERROR);
+        $dom                                     = new \DOMDocument();
+        $dom->recover                            = true;
+        $responseLoadedSuccess                   = $dom->loadXML($response, LIBXML_NOWARNING | LIBXML_NOERROR);
         $responseLoadedSuccessWithAdditionalTags = false;
 
         if ($responseLoadedSuccess
