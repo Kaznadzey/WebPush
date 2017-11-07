@@ -2,6 +2,7 @@ WebPush library
 =========
 
 [![Build Status](https://travis-ci.org/Kaznadzey/WebPush.svg?branch=master)](https://travis-ci.org/Kaznadzey/WebPush)
+[![Coverage Status](https://coveralls.io/repos/github/Kaznadzey/WebPush/badge.png?branch=master)](https://coveralls.io/github/Kaznadzey/WebPush?branch=master)
 [![Total Downloads](https://poser.pugx.org/nazz/webpush/downloads)](https://packagist.org/packages/nazz/webpush)
 [![License](https://poser.pugx.org/nazz/webpush/license)](https://packagist.org/packages/nazz/webpush)
 
