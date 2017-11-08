@@ -17,6 +17,7 @@ class PackageGeneratorDtoTest extends \PHPUnit_Framework_TestCase
         $pemCertificatePath  = 'certificate/pem/filepath.pem';
         $certificatePassword = 'my-password';
         $iconsPath           = 'iconset/';
+        $authenticationToken = 'authenticationToken';
 
         $dto = new PackageGeneratorDto(
             $siteName,
@@ -27,6 +28,7 @@ class PackageGeneratorDtoTest extends \PHPUnit_Framework_TestCase
             $pemCertificatePath,
             $certificatePassword, $iconsPath
         );
+        $dto->setAuthenticationToken($authenticationToken);
 
         $this->assertEquals($siteName, $dto->getWebSiteName());
         $this->assertEquals($appId, $dto->getAppId());
@@ -36,5 +38,6 @@ class PackageGeneratorDtoTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($pemCertificatePath, $dto->getCertificatePEMFilePath());
         $this->assertEquals($certificatePassword, $dto->getCertificateP12Password());
         $this->assertEquals($iconsPath, $dto->getIconSetDirPath());
+        $this->assertEquals($authenticationToken, $dto->getAuthenticationToken());
     }
 }
