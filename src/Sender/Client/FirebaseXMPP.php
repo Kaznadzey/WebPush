@@ -331,7 +331,7 @@ class FirebaseXMPP implements SenderClientInterface
      * @return \DOMElement
      * @throws \DomainException
      */
-    private function parseResponse($response)
+    protected function parseResponse($response)
     {
         $dom                                     = new \DOMDocument();
         $dom->recover                            = true;

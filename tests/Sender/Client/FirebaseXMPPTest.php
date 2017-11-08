@@ -49,6 +49,62 @@ class FirebaseXMPPTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    public function testParseResponseSuccessCaseFirstResponse()
+    {
+        $client = new FirebaseXMPP(
+            'id',
+            123456,
+            'apiKey',
+            'host',
+            12
+        );
+
+        $response = '<stream><node/></stream>';
+
+        $domElement = $this->getMethod('parseResponse')
+            ->invoke($client, $response);
+
+        $this->assertInstanceOf(\DOMElement::class, $domElement);
+    }
+
+    public function testParseResponseSuccessCaseSecondResponse()
+    {
+        $client = new FirebaseXMPP(
+            'id',
+            123456,
+            'apiKey',
+            'host',
+            12
+        );
+
+        $this->getProperty('openResponseTag')->setValue($client, '<stream>');
+        $this->getProperty('closeResponseTag')->setValue($client, '</stream>');
+
+        $response = '<node/>';
+
+        $domElement = $this->getMethod('parseResponse')
+            ->invoke($client, $response);
+
+        $this->assertInstanceOf(\DOMElement::class, $domElement);
+    }
+
+    public function testParseResponseFail()
+    {
+        $client = new FirebaseXMPP(
+            'id',
+            123456,
+            'apiKey',
+            'host',
+            12
+        );
+
+        $response = '<root><node/></root>';
+
+        $this->expectException(\DomainException::class);
+        $this->expectExceptionMessage('Response is Unparsible');
+        $this->getMethod('parseResponse')->invoke($client, $response);
+    }
+
     /**
      * @return Message
      */
@@ -80,5 +136,19 @@ class FirebaseXMPPTest extends \PHPUnit_Framework_TestCase
         $method->setAccessible(true);
 
         return $method;
+    }
+
+    /**
+     * @param $propertyName
+     *
+     * @return \ReflectionProperty
+     */
+    protected function getProperty($propertyName)
+    {
+        $class    = new \ReflectionClass(FirebaseXMPP::class);
+        $property = $class->getProperty($propertyName);
+        $property->setAccessible(true);
+
+        return $property;
     }
 }
