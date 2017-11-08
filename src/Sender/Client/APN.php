@@ -151,7 +151,7 @@ class APN implements SenderClientInterface
      * @return resource
      * @throws \DomainException
      */
-    private function getSocketClient()
+    protected function getSocketClient()
     {
         if (!is_resource($this->socketClient)) {
             $this->socketClient = $this->openSocketClient();
@@ -162,6 +162,8 @@ class APN implements SenderClientInterface
 
     /**
      * Close socket connection
+     *
+     * @codeCoverageIgnore
      */
     private function closeSocketConnection()
     {

@@ -4,6 +4,16 @@ namespace Nazz\WebPush\Sender\Client;
 
 use Nazz\WebPush\Sender\Message;
 
+function is_resource($param)
+{
+    return true;
+}
+
+function fwrite($client, $message, $length)
+{
+    return true;
+}
+
 /**
  * Class APNTest
  */
@@ -72,6 +82,37 @@ class APNTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    public function testGetSocketClient()
+    {
+        $client = new APN(
+            '',
+            '',
+            '',
+            300
+        );
+
+        $this->getProperty('socketClient')->setValue($client, 'value');
+
+        $actualResponse = $this->getMethod('getSocketClient')
+            ->invoke($client);
+
+        $this->assertTrue($actualResponse === 'value');
+    }
+
+    public function testSend()
+    {
+        $client = new APN(
+            '',
+            '',
+            '',
+            300
+        );
+
+        $isSent = $client->send(md5('token'), $this->getMessage());
+
+        $this->assertTrue($isSent);
+    }
+
     /**
      * @return Message
      */
@@ -103,5 +144,19 @@ class APNTest extends \PHPUnit_Framework_TestCase
         $method->setAccessible(true);
 
         return $method;
+    }
+
+    /**
+     * @param $propertyName
+     *
+     * @return \ReflectionProperty
+     */
+    protected function getProperty($propertyName)
+    {
+        $class    = new \ReflectionClass(APN::class);
+        $property = $class->getProperty($propertyName);
+        $property->setAccessible(true);
+
+        return $property;
     }
 }
