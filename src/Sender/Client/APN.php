@@ -53,6 +53,7 @@ class APN implements SenderClientInterface
      *
      * @return bool
      * @throws \DomainException
+     * @codeCoverageIgnore
      */
     public function send($token, Message $message, $resendOnError = true)
     {
@@ -174,6 +175,7 @@ class APN implements SenderClientInterface
     /**
      * @return bool|resource
      * @throws \DomainException
+     * @codeCoverageIgnore
      */
     private function openSocketClient()
     {

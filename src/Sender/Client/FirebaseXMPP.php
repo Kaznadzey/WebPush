@@ -105,6 +105,7 @@ class FirebaseXMPP implements SenderClientInterface
      * @return bool
      * @throws \DomainException
      * @throws \Exception
+     * @codeCoverageIgnore
      */
     private function sendRequest($messageId, $encodedParams)
     {
@@ -183,6 +184,7 @@ class FirebaseXMPP implements SenderClientInterface
     /**
      * @return null|resource
      * @throws \DomainException
+     * @codeCoverageIgnore
      */
     private function openSocketClient()
     {
@@ -310,6 +312,7 @@ class FirebaseXMPP implements SenderClientInterface
      *
      * @return string
      * @throws \DomainException
+     * @codeCoverageIgnore
      */
     private function readResponse($socketClient)
     {
