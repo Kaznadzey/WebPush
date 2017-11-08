@@ -192,6 +192,9 @@ class APN implements SenderClientInterface
             ]
         );
 
+        $errorCode    = 0;
+        $errorMessage = '';
+
         $socketClient = stream_socket_client(
             $this->apnServerAddress,
             $errorCode,

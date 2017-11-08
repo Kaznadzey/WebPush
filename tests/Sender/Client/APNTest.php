@@ -6,12 +6,17 @@ use Nazz\WebPush\Sender\Message;
 
 function is_resource($param)
 {
-    return true;
+    return $param;
 }
 
 function fwrite($client, $message, $length)
 {
     return true;
+}
+
+function stream_socket_client()
+{
+    return false;
 }
 
 /**
@@ -82,7 +87,7 @@ class APNTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testGetSocketClient()
+    public function testGetSocketClientSuccess()
     {
         $client = new APN(
             '',
@@ -91,12 +96,30 @@ class APNTest extends \PHPUnit_Framework_TestCase
             300
         );
 
-        $this->getProperty('socketClient')->setValue($client, 'value');
+        $this->getProperty('socketClient')->setValue($client, true);
 
         $actualResponse = $this->getMethod('getSocketClient')
             ->invoke($client);
 
-        $this->assertTrue($actualResponse === 'value');
+        $this->assertTrue($actualResponse);
+    }
+
+    public function testGetSocketClientFail()
+    {
+        $client = new APN(
+            '',
+            '',
+            '',
+            300
+        );
+
+        $this->getProperty('socketClient')->setValue($client, false);
+
+        $this->expectException(\DomainException::class);
+        $this->expectExceptionMessage('Cant\'t create socket client. Error 0: .');
+
+        $this->getMethod('getSocketClient')
+            ->invoke($client);
     }
 
     public function testSend()
@@ -107,6 +130,8 @@ class APNTest extends \PHPUnit_Framework_TestCase
             '',
             300
         );
+
+        $this->getProperty('socketClient')->setValue($client, true);
 
         $isSent = $client->send(md5('token'), $this->getMessage());
 
