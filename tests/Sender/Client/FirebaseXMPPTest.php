@@ -4,6 +4,11 @@ namespace Nazz\WebPush\Sender\Client;
 
 use Nazz\WebPush\Sender\Message;
 
+function fread($actualResponse)
+{
+    return $actualResponse;
+}
+
 /**
  * Class FirebaseXMPPTest
  */
@@ -103,6 +108,24 @@ class FirebaseXMPPTest extends \PHPUnit_Framework_TestCase
         $this->expectException(\DomainException::class);
         $this->expectExceptionMessage('Response is Unparsible');
         $this->getMethod('parseResponse')->invoke($client, $response);
+    }
+
+    public function testReadResponse()
+    {
+        $client = new FirebaseXMPP(
+            'id',
+            123456,
+            'apiKey',
+            'host',
+            12
+        );
+
+        $expectedResponse = '<stream><node/></stream>';
+
+        $actualResponse = $this->getMethod('readResponse')
+            ->invoke($client, $expectedResponse);
+
+        $this->assertEquals($expectedResponse, $actualResponse);
     }
 
     /**

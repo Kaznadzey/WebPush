@@ -314,7 +314,7 @@ class FirebaseXMPP implements SenderClientInterface
      * @throws \DomainException
      * @codeCoverageIgnore
      */
-    private function readResponse($socketClient)
+    protected function readResponse($socketClient)
     {
         $response = fread($socketClient, 1387);
 
