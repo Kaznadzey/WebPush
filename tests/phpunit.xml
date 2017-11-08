@@ -14,9 +14,9 @@
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">
             <directory suffix=".php">../src</directory>
+            <exclude>
+                <file>../src/Subscription/APN/PackageGenerator.php</file>
+            </exclude>
         </whitelist>
-        <exclude>
-            <file>../src/Subscription/APN/PackageGenerator.php</file>
-        </exclude>
     </filter>
 </phpunit>
