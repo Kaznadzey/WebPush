@@ -1,0 +1,10 @@
+{
+    "websiteName": "{{ webSiteName }}",
+    "websitePushID": "{{ appId }}",
+    "allowedDomains": [
+        "{{ webServiceUrl }}"
+    ],
+    "urlFormatString": "{{ urlFormatString }}",
+    "authenticationToken": "{{ authenticationToken }}",
+    "webServiceURL": "{{ webServiceUrl }}"
+}
