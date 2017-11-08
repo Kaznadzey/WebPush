@@ -99,6 +99,75 @@ class FirebaseXMPP implements SenderClientInterface
     }
 
     /**
+     * @param $socketClient
+     *
+     * @return string
+     * @throws \DomainException
+     * @codeCoverageIgnore
+     */
+    protected function readResponse($socketClient)
+    {
+        $response = fread($socketClient, 1387);
+
+        if (is_bool($response)) {
+            throw new \DomainException('Can\'t read response');
+        }
+
+        return trim($response);
+    }
+
+    /**
+     * @param string $response
+     *
+     * @return \DOMElement
+     * @throws \DomainException
+     */
+    protected function parseResponse($response)
+    {
+        $dom                                     = new \DOMDocument();
+        $dom->recover                            = true;
+        $responseLoadedSuccess                   = $dom->loadXML($response, LIBXML_NOWARNING | LIBXML_NOERROR);
+        $responseLoadedSuccessWithAdditionalTags = false;
+
+        if ($responseLoadedSuccess
+            && $dom->documentElement->localName !== 'stream'
+            && is_string($this->openResponseTag)
+            && is_string($this->closeResponseTag)
+        ) {
+            $responseLoadedSuccessWithAdditionalTags = $dom->loadXML(
+                sprintf(
+                    '%s%s%s',
+                    $this->openResponseTag,
+                    $response,
+                    $this->closeResponseTag
+                ),
+                LIBXML_NOWARNING | LIBXML_NOERROR
+            );
+        }
+
+        if (!$responseLoadedSuccess && !$responseLoadedSuccessWithAdditionalTags) {
+            throw new \DomainException('Can\'t load response as DMOElement');
+        }
+
+        if (!is_null($dom->documentElement)
+            && $dom->documentElement->localName === 'stream'
+        ) {
+
+            if (!$responseLoadedSuccessWithAdditionalTags) {
+                $this->openResponseTag  = substr($response, 0, strpos($response, '>') + 1);
+                $this->closeResponseTag = sprintf(
+                    '</%s>',
+                    $dom->documentElement->tagName
+                );
+            }
+
+            return $dom->documentElement;
+        }
+
+        throw new \DomainException('Response is Unparsible');
+    }
+
+    /**
      * @param string $messageId
      * @param string $encodedParams
      *
@@ -155,6 +224,7 @@ class FirebaseXMPP implements SenderClientInterface
     /**
      * @return resource
      * @throws \DomainException
+     * @codeCoverageIgnore
      */
     private function getSocketClient()
     {
@@ -171,6 +241,7 @@ class FirebaseXMPP implements SenderClientInterface
 
     /**
      * @return bool
+     * @codeCoverageIgnore
      */
     private function isSocketClientOpened()
     {
@@ -305,74 +376,5 @@ class FirebaseXMPP implements SenderClientInterface
         }
 
         return $socketClient;
-    }
-
-    /**
-     * @param $socketClient
-     *
-     * @return string
-     * @throws \DomainException
-     * @codeCoverageIgnore
-     */
-    protected function readResponse($socketClient)
-    {
-        $response = fread($socketClient, 1387);
-
-        if (is_bool($response)) {
-            throw new \DomainException('Can\'t read response');
-        }
-
-        return trim($response);
-    }
-
-    /**
-     * @param string $response
-     *
-     * @return \DOMElement
-     * @throws \DomainException
-     */
-    protected function parseResponse($response)
-    {
-        $dom                                     = new \DOMDocument();
-        $dom->recover                            = true;
-        $responseLoadedSuccess                   = $dom->loadXML($response, LIBXML_NOWARNING | LIBXML_NOERROR);
-        $responseLoadedSuccessWithAdditionalTags = false;
-
-        if ($responseLoadedSuccess
-            && $dom->documentElement->localName !== 'stream'
-            && is_string($this->openResponseTag)
-            && is_string($this->closeResponseTag)
-        ) {
-            $responseLoadedSuccessWithAdditionalTags = $dom->loadXML(
-                sprintf(
-                    '%s%s%s',
-                    $this->openResponseTag,
-                    $response,
-                    $this->closeResponseTag
-                ),
-                LIBXML_NOWARNING | LIBXML_NOERROR
-            );
-        }
-
-        if (!$responseLoadedSuccess && !$responseLoadedSuccessWithAdditionalTags) {
-            throw new \DomainException('Can\'t load response as DMOElement');
-        }
-
-        if (!is_null($dom->documentElement)
-            && $dom->documentElement->localName === 'stream'
-        ) {
-
-            if (!$responseLoadedSuccessWithAdditionalTags) {
-                $this->openResponseTag  = substr($response, 0, strpos($response, '>') + 1);
-                $this->closeResponseTag = sprintf(
-                    '</%s>',
-                    $dom->documentElement->tagName
-                );
-            }
-
-            return $dom->documentElement;
-        }
-
-        throw new \DomainException('Response is Unparsible');
     }
 }
