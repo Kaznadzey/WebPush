@@ -6,12 +6,3 @@ checks:
     php:
         code_rating: true
         duplication: true
-        
-build:
-    tests:
-        override:
-            -
-                command: './vendor/bin/phpunit -c ./tests/phpunit.xml --coverage-clover ./build/logs/clover.xml ./tests'
-                coverage:
-                    file: './build/logs/clover.xml'
-                    format: 'clover'
